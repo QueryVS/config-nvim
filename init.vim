@@ -534,6 +534,21 @@ if neo_tree then
     vim.cmd("Neotree focus")
   end
 
+  local function open_neo_tree_file_normal(state)
+    local node = state.tree:get_node()
+    if not node then
+      return
+    end
+
+    remember_neo_tree_dir(node)
+    if node.type ~= "file" then
+      require("neo-tree.sources.filesystem.commands").open(state)
+      return
+    end
+
+    run_neo_tree_command_keep_focus(state, "open")
+  end
+
   neo_tree.setup({
     close_if_last_window = true,
     enable_git_status = true,
@@ -546,6 +561,9 @@ if neo_tree then
         end,
         ["o"] = function(state)
           open_neo_tree_file_in_tab_keep_focus(state)
+        end,
+        ["e"] = function(state)
+          open_neo_tree_file_normal(state)
         end,
         ["s"] = function(state)
           run_neo_tree_command_keep_focus(state, "open_vsplit")
@@ -667,7 +685,7 @@ vim.keymap.set("n", "<leader>mp", "<cmd>Glow<CR>", { desc = "Markdown preview" }
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     if vim.fn.argc() == 0 and not vim.g.started_by_firenvim then
-      vim.cmd("Neotree show")
+      vim.cmd("Neotree focus")
     end
   end,
 })

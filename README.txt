@@ -79,8 +79,11 @@ Space fm            Open mini file explorer
 
 Neo-tree
 --------
+Neovim opens with focus in Neo-tree when started without a file argument.
+
 Enter               Expand/collapse directory, or open file in a new tab
 o                   Same as Enter
+e                   Open file normally and keep focus in Neo-tree
 s                   Open file in vertical split inside current tab
 S                   Open file in horizontal split inside current tab
 v                   Open file in vertical split inside current tab
