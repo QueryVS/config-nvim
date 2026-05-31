@@ -26,7 +26,9 @@ Plug 'tpope/vim-commentary'
 Plug 'junegunn/vim-easy-align'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'sheerun/vim-polyglot'
+" Treesitter handles syntax for modern languages; keep polyglot disabled to
+" avoid BufWinEnter/<afile> startup errors on unnamed buffers.
+" Plug 'sheerun/vim-polyglot'
 Plug 'nvim-mini/mini.nvim'
 
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
@@ -68,6 +70,8 @@ set conceallevel=2
 set concealcursor=nc
 set list
 set listchars=tab:»\ ,trail:·,extends:>,precedes:<,nbsp:+
+set showtabline=2
+set tabline=%!QueryVSTabLine()
 
 filetype plugin indent on
 syntax enable
@@ -101,12 +105,12 @@ nnoremap <silent> <leader>r= <C-w>=
 
 nnoremap <silent> <leader>bn :bnext<CR>
 nnoremap <silent> <leader>bp :bprevious<CR>
-nnoremap <silent> <Tab> :bnext<CR>
-nnoremap <silent> <S-Tab> :bprevious<CR>
-nnoremap <silent> <A-j> :bnext<CR>
-nnoremap <silent> <A-k> :bprevious<CR>
-nnoremap <silent> <A-Down> :bnext<CR>
-nnoremap <silent> <A-Up> :bprevious<CR>
+nnoremap <silent> <Tab> :tabnext<CR>
+nnoremap <silent> <S-Tab> :tabprevious<CR>
+nnoremap <silent> <A-j> :tabnext<CR>
+nnoremap <silent> <A-k> :tabprevious<CR>
+nnoremap <silent> <A-Down> :tabnext<CR>
+nnoremap <silent> <A-Up> :tabprevious<CR>
 nnoremap <silent> <C-Left> :tabprevious<CR>
 nnoremap <silent> <C-Right> :tabnext<CR>
 nnoremap <silent> <A-Left> :tabprevious<CR>
@@ -120,11 +124,226 @@ nnoremap <silent> <leader>tc :tabclose<CR>
 
 nnoremap <silent> <leader>e :Neotree toggle reveal<CR>
 nnoremap <silent> <C-n> :Neotree toggle reveal<CR>
-nnoremap <silent> <leader>tt :botright 15split \| terminal<CR>
+nnoremap <silent> <leader>tt :TerminalPanel<CR>
+nnoremap <silent> <leader>tv :TerminalVPanel<CR>
+nnoremap <silent> <leader>tf :TerminalHere<CR>
+nnoremap <silent> <leader>tF :TerminalVHere<CR>
+nnoremap <silent> <C-t> :TerminalPanel<CR>
+tnoremap <Esc> <C-\><C-n>
 tnoremap <Esc><Esc> <C-\><C-n>
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
+tnoremap <A-h> <C-\><C-n>:tabprevious<CR>
+tnoremap <A-l> <C-\><C-n>:tabnext<CR>
+tnoremap <A-j> <C-\><C-n>:tabnext<CR>
+tnoremap <A-k> <C-\><C-n>:tabprevious<CR>
 
 nnoremap <leader>a <Plug>(EasyAlign)
 xnoremap <leader>a <Plug>(EasyAlign)
+
+let g:queryvs_terminal_buf = -1
+let g:queryvs_last_file_dir = getcwd()
+let g:queryvs_last_file_win = -1
+
+function! s:IsFileWindow(winid) abort
+  if !win_id2win(a:winid)
+    return 0
+  endif
+
+  let l:buf = winbufnr(a:winid)
+  let l:bt = getbufvar(l:buf, '&buftype')
+  let l:ft = getbufvar(l:buf, '&filetype')
+  return l:bt ==# '' && l:ft !=# 'neo-tree'
+endfunction
+
+function! s:RememberFileWindow() abort
+  if s:IsFileWindow(win_getid())
+    let g:queryvs_last_file_win = win_getid()
+  endif
+endfunction
+
+function! s:GoToFileWindowForBufferSwitch() abort
+  if s:IsFileWindow(win_getid())
+    let g:queryvs_last_file_win = win_getid()
+    return
+  endif
+
+  if s:IsFileWindow(g:queryvs_last_file_win)
+    call win_gotoid(g:queryvs_last_file_win)
+    return
+  endif
+
+  for l:win in range(1, winnr('$'))
+    let l:winid = win_getid(l:win)
+    if s:IsFileWindow(l:winid)
+      call win_gotoid(l:winid)
+      let g:queryvs_last_file_win = l:winid
+      return
+    endif
+  endfor
+endfunction
+
+function! s:IsFileBuffer(bufnr) abort
+  return buflisted(a:bufnr) && getbufvar(a:bufnr, '&buftype') ==# ''
+endfunction
+
+function! s:CurrentFileBuffer() abort
+  if s:IsFileWindow(win_getid())
+    return bufnr('%')
+  endif
+
+  if s:IsFileWindow(g:queryvs_last_file_win)
+    return winbufnr(g:queryvs_last_file_win)
+  endif
+
+  for l:win in range(1, winnr('$'))
+    let l:winid = win_getid(l:win)
+    if s:IsFileWindow(l:winid)
+      return winbufnr(l:winid)
+    endif
+  endfor
+
+  return bufnr('%')
+endfunction
+
+function! s:TargetFileBuffer(direction) abort
+  let l:buffers = filter(range(1, bufnr('$')), 's:IsFileBuffer(v:val)')
+  if empty(l:buffers)
+    return -1
+  endif
+
+  let l:current = s:CurrentFileBuffer()
+  let l:index = index(l:buffers, l:current)
+  if l:index < 0
+    let l:index = 0
+  else
+    let l:index = (l:index + a:direction + len(l:buffers)) % len(l:buffers)
+  endif
+
+  return l:buffers[l:index]
+endfunction
+
+function! s:BufferSwitch(direction) abort
+  let l:target = s:TargetFileBuffer(a:direction)
+  if l:target < 0
+    return
+  endif
+
+  call s:GoToFileWindowForBufferSwitch()
+  execute 'buffer ' . l:target
+  call s:RememberFileWindow()
+endfunction
+
+command! BufferNextSmart call s:BufferSwitch(1)
+command! BufferPrevSmart call s:BufferSwitch(-1)
+
+function! QueryVSTabLine() abort
+  let l:line = ''
+  for l:i in range(1, tabpagenr('$'))
+    let l:winnr = tabpagewinnr(l:i)
+    let l:bufnr = tabpagebuflist(l:i)[l:winnr - 1]
+    let l:name = bufname(l:bufnr)
+    let l:ft = getbufvar(l:bufnr, '&filetype')
+    let l:bt = getbufvar(l:bufnr, '&buftype')
+
+    if l:ft ==# 'neo-tree'
+      let l:label = 'Neo-tree'
+    elseif l:bt ==# 'terminal'
+      let l:label = 'Terminal'
+    elseif empty(l:name)
+      let l:label = '[No Name]'
+    else
+      let l:label = fnamemodify(l:name, ':t')
+    endif
+
+    if empty(l:label)
+      let l:label = '[No Name]'
+    endif
+
+    let l:hl = l:i == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#'
+    let l:line .= l:hl . '%' . l:i . 'T ' . l:i . ':' . l:label . ' '
+  endfor
+
+  let l:line .= '%#TabLineFill#%T'
+  return l:line
+endfunction
+
+function! s:FocusedDir() abort
+  let l:path = expand('%:p')
+  if !empty(l:path) && filereadable(l:path)
+    let g:queryvs_last_file_dir = fnamemodify(l:path, ':h')
+    return g:queryvs_last_file_dir
+  endif
+
+  if !empty(l:path) && isdirectory(l:path)
+    let g:queryvs_last_file_dir = l:path
+    return g:queryvs_last_file_dir
+  endif
+
+  return g:queryvs_last_file_dir
+endfunction
+
+function! s:OpenTerminalPanel(vertical, use_focused_dir) abort
+  let l:term_height = max([8, float2nr(&lines / 3)])
+  let l:term_width = max([30, float2nr(&columns / 3)])
+  let l:dir = a:use_focused_dir ? s:FocusedDir() : ''
+
+  if a:use_focused_dir
+    if a:vertical
+      execute 'botright vertical ' . l:term_width . 'split'
+    else
+      execute 'botright ' . l:term_height . 'split'
+    endif
+    if !empty(l:dir) && isdirectory(l:dir)
+      execute 'lcd ' . fnameescape(l:dir)
+    endif
+    terminal
+    setlocal nobuflisted
+    startinsert
+    return
+  endif
+
+  if bufexists(g:queryvs_terminal_buf)
+    let l:wins = win_findbuf(g:queryvs_terminal_buf)
+    if !empty(l:wins)
+      call win_gotoid(l:wins[0])
+      if a:vertical
+        execute 'vertical resize ' . l:term_width
+      else
+        execute 'resize ' . l:term_height
+      endif
+    elseif a:vertical
+      execute 'botright vertical ' . l:term_width . 'split'
+      execute 'buffer ' . g:queryvs_terminal_buf
+    else
+      execute 'botright ' . l:term_height . 'split'
+      execute 'buffer ' . g:queryvs_terminal_buf
+    endif
+  else
+    if a:vertical
+      execute 'botright vertical ' . l:term_width . 'split'
+    else
+      execute 'botright ' . l:term_height . 'split'
+    endif
+    terminal
+    let g:queryvs_terminal_buf = bufnr('%')
+    setlocal nobuflisted
+  endif
+  startinsert
+endfunction
+
+command! TerminalPanel call s:OpenTerminalPanel(0, 0)
+command! TerminalVPanel call s:OpenTerminalPanel(1, 0)
+command! TerminalHere call s:OpenTerminalPanel(0, 1)
+command! TerminalVHere call s:OpenTerminalPanel(1, 1)
+
+augroup queryvs_focus_dir
+  autocmd!
+  autocmd BufEnter,WinEnter * call <SID>RememberFileWindow()
+  autocmd BufEnter * if filereadable(expand('%:p')) | let g:queryvs_last_file_dir = expand('%:p:h') | endif
+augroup END
 
 " -----------------------------
 " CoC: completion, navigation, refactor
@@ -159,8 +378,8 @@ nnoremap <silent> <leader>co :CocList outline<CR>
 nnoremap <silent> <leader>cs :CocList -I symbols<CR>
 
 function! ShowDocumentation() abort
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
+  if exists('*CocAction') && exists('*CocActionAsync') && CocAction('hasProvider', 'hover')
+    silent! call CocActionAsync('doHover')
   else
     execute 'h ' . expand('<cword>')
   endif
@@ -168,7 +387,7 @@ endfunction
 
 augroup coc_user_actions
   autocmd!
-  autocmd CursorHold * silent call CocActionAsync('highlight')
+  autocmd CursorHold * if exists('*CocActionAsync') | silent! call CocActionAsync('highlight') | endif
 augroup END
 
 " -----------------------------
@@ -259,38 +478,60 @@ end
 
 local neo_tree = safe_require("neo-tree")
 if neo_tree then
-  local function open_neo_tree_file_keep_focus(state, command)
+  -- neo-tree clears the legacy netrw FileExplorer group during setup. Defining
+  -- it first prevents startup noise when netrw has not created it yet.
+  vim.cmd("augroup FileExplorer | augroup END")
+
+  local function remember_neo_tree_dir(node)
+    if not node or not node.path then
+      return
+    end
+    if node.type == "directory" then
+      vim.g.queryvs_last_file_dir = node.path
+    elseif node.type == "file" then
+      vim.g.queryvs_last_file_dir = vim.fn.fnamemodify(node.path, ":h")
+    end
+  end
+
+  local function run_neo_tree_command_keep_focus(state, command)
     local node = state.tree:get_node()
     if not node then
       return
     end
 
+    remember_neo_tree_dir(node)
+    local fs_commands = require("neo-tree.sources.filesystem.commands")
+
+    if node.type ~= "file" then
+      fs_commands.open(state)
+      return
+    end
+
+    local tree_win = vim.api.nvim_get_current_win()
+
+    fs_commands[command](state)
+
+    if vim.api.nvim_win_is_valid(tree_win) then
+      vim.api.nvim_set_current_win(tree_win)
+    end
+  end
+
+  local function open_neo_tree_file_in_tab_keep_focus(state)
+    local node = state.tree:get_node()
+    if not node then
+      return
+    end
+
+    remember_neo_tree_dir(node)
     if node.type ~= "file" then
       require("neo-tree.sources.filesystem.commands").open(state)
       return
     end
 
-    local tree_win = vim.api.nvim_get_current_win()
-    local target_win = nil
-
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-      local buf = vim.api.nvim_win_get_buf(win)
-      if vim.bo[buf].filetype ~= "neo-tree" then
-        target_win = win
-        break
-      end
-    end
-
-    if not target_win then
-      vim.cmd("vsplit")
-      target_win = vim.api.nvim_get_current_win()
-    end
-
-    vim.api.nvim_set_current_win(target_win)
-    vim.cmd(command .. " " .. vim.fn.fnameescape(node.path))
-    if vim.api.nvim_win_is_valid(tree_win) then
-      vim.api.nvim_set_current_win(tree_win)
-    end
+    local current_tab = vim.api.nvim_get_current_tabpage()
+    vim.cmd("tabnew " .. vim.fn.fnameescape(node.path))
+    vim.api.nvim_set_current_tabpage(current_tab)
+    vim.cmd("Neotree focus")
   end
 
   neo_tree.setup({
@@ -301,35 +542,31 @@ if neo_tree then
       width = 32,
       mappings = {
         ["<CR>"] = function(state)
-          open_neo_tree_file_keep_focus(state, "edit")
+          open_neo_tree_file_in_tab_keep_focus(state)
         end,
         ["o"] = function(state)
-          open_neo_tree_file_keep_focus(state, "edit")
+          open_neo_tree_file_in_tab_keep_focus(state)
         end,
         ["s"] = function(state)
-          open_neo_tree_file_keep_focus(state, "vsplit")
+          run_neo_tree_command_keep_focus(state, "open_vsplit")
         end,
         ["S"] = function(state)
-          open_neo_tree_file_keep_focus(state, "split")
+          run_neo_tree_command_keep_focus(state, "open_split")
         end,
         ["v"] = function(state)
-          open_neo_tree_file_keep_focus(state, "vsplit")
+          run_neo_tree_command_keep_focus(state, "open_vsplit")
+        end,
+        ["T"] = function(state)
+          remember_neo_tree_dir(state.tree:get_node())
+          vim.cmd("TerminalHere")
         end,
         ["t"] = function(state)
-          local node = state.tree:get_node()
-          if node.type ~= "file" then
-            vim.notify("Open a file node in a new tab", vim.log.levels.INFO)
-            return
-          end
-          local current_tab = vim.api.nvim_get_current_tabpage()
-          vim.cmd("tabnew")
-          vim.cmd("edit " .. vim.fn.fnameescape(node.path))
-          vim.api.nvim_set_current_tabpage(current_tab)
-          vim.cmd("Neotree focus")
+          open_neo_tree_file_in_tab_keep_focus(state)
         end,
       },
     },
     filesystem = {
+      hijack_netrw_behavior = "disabled",
       follow_current_file = { enabled = true },
       use_libuv_file_watcher = true,
       filtered_items = {
@@ -387,7 +624,6 @@ local mini_modules = {
   "splitjoin",
   "statusline",
   "surround",
-  "tabline",
   "trailspace",
 }
 
