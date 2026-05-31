@@ -131,10 +131,11 @@ keeps focus in Neo-tree.
 Terminal
 --------
 Space tt            Open/focus persistent bottom terminal panel
-Ctrl t              Open/focus persistent bottom terminal panel
+Ctrl t              Open terminal in a new tab
 Space tv            Open/focus persistent vertical terminal panel
 Space tf            Open new bottom terminal at last focused file directory
 Space tF            Open new vertical terminal at last focused file directory
+Space tN            Open terminal in a new tab
 
 Esc                 Leave terminal mode and return to Vim commands
 Esc Esc             Same as Esc

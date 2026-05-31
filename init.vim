@@ -118,7 +118,8 @@ nnoremap <silent> <leader>tt :TerminalPanel<CR>
 nnoremap <silent> <leader>tv :TerminalVPanel<CR>
 nnoremap <silent> <leader>tf :TerminalHere<CR>
 nnoremap <silent> <leader>tF :TerminalVHere<CR>
-nnoremap <silent> <C-t> :TerminalPanel<CR>
+nnoremap <silent> <leader>tN :TerminalTab<CR>
+nnoremap <silent> <C-t> :TerminalTab<CR>
 tnoremap <Esc> <C-\><C-n>
 tnoremap <Esc><Esc> <C-\><C-n>
 tnoremap <C-h> <C-\><C-n><C-w>h
@@ -320,10 +321,17 @@ function! s:OpenTerminalPanel(vertical, use_focused_dir) abort
   startinsert
 endfunction
 
+function! s:OpenTerminalTab() abort
+  tabnew
+  terminal
+  startinsert
+endfunction
+
 command! TerminalPanel call s:OpenTerminalPanel(0, 0)
 command! TerminalVPanel call s:OpenTerminalPanel(1, 0)
 command! TerminalHere call s:OpenTerminalPanel(0, 1)
 command! TerminalVHere call s:OpenTerminalPanel(1, 1)
+command! TerminalTab call s:OpenTerminalTab()
 
 augroup queryvs_focus_dir
   autocmd!
