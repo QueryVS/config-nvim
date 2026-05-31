@@ -107,16 +107,6 @@ nnoremap <silent> <leader>bn :bnext<CR>
 nnoremap <silent> <leader>bp :bprevious<CR>
 nnoremap <silent> <Tab> :tabnext<CR>
 nnoremap <silent> <S-Tab> :tabprevious<CR>
-nnoremap <silent> <A-j> :tabnext<CR>
-nnoremap <silent> <A-k> :tabprevious<CR>
-nnoremap <silent> <A-Down> :tabnext<CR>
-nnoremap <silent> <A-Up> :tabprevious<CR>
-nnoremap <silent> <C-Left> :tabprevious<CR>
-nnoremap <silent> <C-Right> :tabnext<CR>
-nnoremap <silent> <A-Left> :tabprevious<CR>
-nnoremap <silent> <A-Right> :tabnext<CR>
-nnoremap <silent> <A-h> :tabprevious<CR>
-nnoremap <silent> <A-l> :tabnext<CR>
 nnoremap <silent> <leader>tp :tabprevious<CR>
 nnoremap <silent> <leader>tl :tabnext<CR>
 nnoremap <silent> <leader>tn :tabnew<CR>
@@ -135,10 +125,6 @@ tnoremap <C-h> <C-\><C-n><C-w>h
 tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
-tnoremap <A-h> <C-\><C-n>:tabprevious<CR>
-tnoremap <A-l> <C-\><C-n>:tabnext<CR>
-tnoremap <A-j> <C-\><C-n>:tabnext<CR>
-tnoremap <A-k> <C-\><C-n>:tabprevious<CR>
 
 nnoremap <leader>a <Plug>(EasyAlign)
 xnoremap <leader>a <Plug>(EasyAlign)

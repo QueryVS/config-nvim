@@ -7,6 +7,49 @@ Leader key is not a modifier. Press Space, release it, then press the rest of
 the shortcut. Example: Space ff means Space, then f, then f.
 
 
+Plugins
+-------
+vim-plug            Plugin manager used by init.vim. Run :PlugInstall after
+                    changing plugin declarations.
+
+plenary.nvim        Shared Lua helper library required by several modern
+                    Neovim plugins.
+
+nvim-web-devicons   File/folder icons for Neo-tree and other UI plugins. Needs
+                    a Nerd Font in the terminal.
+
+nui.nvim            UI component dependency used by Neo-tree.
+
+neo-tree.nvim       File tree/sidebar. This config uses it as the startup focus,
+                    file opener, split opener, and project navigator.
+
+coc.nvim            Completion, language server integration, goto definition,
+                    rename, code actions, diagnostics, hover docs.
+
+ALE                 Extra lint/fix integration and location-list diagnostics.
+
+vim-fugitive        Git integration: status, blame, diff, log, push, pull.
+
+vim-commentary      Fast commenting with Vim motions.
+
+vim-easy-align      Align text by delimiter with Space a.
+
+nvim-treesitter     Syntax highlighting and indentation based on parsers.
+
+vim-polyglot        Installed but disabled in init.vim. Treesitter covers the
+                    main syntax use case, and polyglot caused startup autocmd
+                    noise with unnamed buffers.
+
+mini.nvim           Small focused modules for picker, files, statusline,
+                    surround, pairs, diff, trailspace, clue hints, and more.
+
+catppuccin          Colorscheme with local highlight overrides.
+
+glow.nvim           Markdown preview command used by Space mp.
+
+render-markdown     Inline Markdown rendering used by Space md.
+
+
 General
 -------
 Esc                 Clear search highlight
@@ -49,16 +92,6 @@ Tabs
 ----
 Tab                 Next tab
 Shift Tab           Previous tab
-Alt j               Next tab
-Alt k               Previous tab
-Alt Down            Next tab
-Alt Up              Previous tab
-Alt h               Previous tab
-Alt l               Next tab
-Alt Left            Previous tab
-Alt Right           Next tab
-Ctrl Left           Previous tab
-Ctrl Right          Next tab
 Space tp            Previous tab
 Space tl            Next tab
 Space tn            New tab
@@ -105,10 +138,6 @@ Ctrl h              Leave terminal mode and move to left window
 Ctrl j              Leave terminal mode and move to lower window
 Ctrl k              Leave terminal mode and move to upper window
 Ctrl l              Leave terminal mode and move to right window
-Alt j               Leave terminal mode and go to next tab
-Alt k               Leave terminal mode and go to previous tab
-Alt h               Leave terminal mode and go to previous tab
-Alt l               Leave terminal mode and go to next tab
 
 
 Coding with CoC
