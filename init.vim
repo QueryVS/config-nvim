@@ -502,7 +502,23 @@ if neo_tree then
     end
   end
 
-  local function open_neo_tree_file_in_tab_keep_focus(state)
+  local function file_is_open_in_tab(path)
+    local target = vim.fn.fnamemodify(path, ":p")
+
+    for tab = 1, vim.fn.tabpagenr("$") do
+      local buffers = vim.fn.tabpagebuflist(tab)
+      for _, bufnr in ipairs(buffers) do
+        local name = vim.api.nvim_buf_get_name(bufnr)
+        if name ~= "" and vim.fn.fnamemodify(name, ":p") == target then
+          return true
+        end
+      end
+    end
+
+    return false
+  end
+
+  local function open_neo_tree_file_in_tab(state)
     local node = state.tree:get_node()
     if not node then
       return
@@ -515,6 +531,11 @@ if neo_tree then
     end
 
     local current_tab = vim.api.nvim_get_current_tabpage()
+    if file_is_open_in_tab(node.path) then
+      vim.cmd("Neotree focus")
+      return
+    end
+
     vim.cmd("tabnew " .. vim.fn.fnameescape(node.path))
     vim.api.nvim_set_current_tabpage(current_tab)
     vim.cmd("Neotree focus")
@@ -543,10 +564,10 @@ if neo_tree then
       width = 32,
       mappings = {
         ["<CR>"] = function(state)
-          open_neo_tree_file_in_tab_keep_focus(state)
+          open_neo_tree_file_in_tab(state)
         end,
         ["o"] = function(state)
-          open_neo_tree_file_in_tab_keep_focus(state)
+          open_neo_tree_file_in_tab(state)
         end,
         ["e"] = function(state)
           open_neo_tree_file_normal(state)
@@ -565,7 +586,7 @@ if neo_tree then
           vim.cmd("TerminalHere")
         end,
         ["t"] = function(state)
-          open_neo_tree_file_in_tab_keep_focus(state)
+          open_neo_tree_file_in_tab(state)
         end,
       },
     },

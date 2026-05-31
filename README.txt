@@ -114,14 +114,18 @@ Neo-tree
 --------
 Neovim opens with focus in Neo-tree when started without a file argument.
 
-Enter               Expand/collapse directory, or open file in a new tab
+Enter               Expand/collapse directory, or open file in a tab
 o                   Same as Enter
 e                   Open file normally and keep focus in Neo-tree
 s                   Open file in vertical split inside current tab
 S                   Open file in horizontal split inside current tab
 v                   Open file in vertical split inside current tab
-t                   Open file in new tab
+t                   Open file in a tab
 T                   Open terminal at selected file/directory location
+
+When opening a file in a tab, Neo-tree first checks whether that file is already
+open in an existing tab. If it is, Neovim does not open a duplicate tab and
+keeps focus in Neo-tree.
 
 
 Terminal
