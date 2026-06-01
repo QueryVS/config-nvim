@@ -23,6 +23,7 @@ nnoremap <silent> <leader>rl :vertical resize +5<CR>
 nnoremap <silent> <leader>rj :resize -3<CR>
 nnoremap <silent> <leader>rk :resize +3<CR>
 nnoremap <silent> <leader>r= <C-w>=
+nnoremap <silent> <leader>rm <C-w>_<C-w>\|
 
 nnoremap <silent> <leader>bn :bnext<CR>
 nnoremap <silent> <leader>bp :bprevious<CR>

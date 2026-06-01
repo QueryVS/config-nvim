@@ -163,6 +163,7 @@ Space rh            Decrease window width
 Space rl            Increase window width
 Space rj            Decrease window height
 Space rk            Increase window height
+Space rm            Maximize active split
 Space r=            Equalize all split sizes
 
 
