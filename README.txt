@@ -166,6 +166,9 @@ Space rk            Increase window height
 Space rm            Maximize active split
 Space r=            Equalize all split sizes
 
+Height resize keys do nothing when there is no real split above or below, so
+they do not grow the command-line area by accident.
+
 
 Buffers
 -------

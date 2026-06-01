@@ -95,6 +95,22 @@ endfunction
 command! BufferNextSmart call s:BufferSwitch(1)
 command! BufferPrevSmart call s:BufferSwitch(-1)
 
+function! s:HasWindowInDirection(direction) abort
+  let l:current = win_getid()
+  execute 'silent! wincmd ' . a:direction
+  let l:moved = win_getid() != l:current
+  call win_gotoid(l:current)
+  return l:moved
+endfunction
+
+function! QueryVSResizeHeight(amount) abort
+  if !s:HasWindowInDirection('j') && !s:HasWindowInDirection('k')
+    return
+  endif
+
+  execute 'resize ' . (a:amount >= 0 ? '+' : '') . a:amount
+endfunction
+
 function! QueryVSTabLine() abort
   let l:line = ''
   for l:i in range(1, tabpagenr('$'))

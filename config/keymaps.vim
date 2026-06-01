@@ -12,16 +12,16 @@ nnoremap <silent> <C-k> <C-w>k
 nnoremap <silent> <C-l> <C-w>l
 nnoremap <silent> <leader><Left> :vertical resize -5<CR>
 nnoremap <silent> <leader><Right> :vertical resize +5<CR>
-nnoremap <silent> <leader><Up> :resize +3<CR>
-nnoremap <silent> <leader><Down> :resize -3<CR>
+nnoremap <silent> <leader><Up> :call QueryVSResizeHeight(3)<CR>
+nnoremap <silent> <leader><Down> :call QueryVSResizeHeight(-3)<CR>
 nnoremap <silent> <A-H> :vertical resize -5<CR>
 nnoremap <silent> <A-L> :vertical resize +5<CR>
-nnoremap <silent> <A-J> :resize -3<CR>
-nnoremap <silent> <A-K> :resize +3<CR>
+nnoremap <silent> <A-J> :call QueryVSResizeHeight(-3)<CR>
+nnoremap <silent> <A-K> :call QueryVSResizeHeight(3)<CR>
 nnoremap <silent> <leader>rh :vertical resize -5<CR>
 nnoremap <silent> <leader>rl :vertical resize +5<CR>
-nnoremap <silent> <leader>rj :resize -3<CR>
-nnoremap <silent> <leader>rk :resize +3<CR>
+nnoremap <silent> <leader>rj :call QueryVSResizeHeight(-3)<CR>
+nnoremap <silent> <leader>rk :call QueryVSResizeHeight(3)<CR>
 nnoremap <silent> <leader>r= <C-w>=
 nnoremap <silent> <leader>rm <C-w>_<C-w>\|
 
