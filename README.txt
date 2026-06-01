@@ -7,6 +7,36 @@ Leader key is not a modifier. Press Space, release it, then press the rest of
 the shortcut. Example: Space ff means Space, then f, then f.
 
 
+Config Layout
+-------------
+init.vim            Entry point. Loads the files below in order.
+
+config/plugins.vim  vim-plug plugin declarations.
+
+config/options.vim  Editor defaults, tabs, search, indentation, tabline.
+
+config/functions.vim
+                    Shared Vimscript helpers for tab labels, buffer switching,
+                    and last focused file window tracking.
+
+config/terminal.vim Terminal panel, current-directory terminals, and Agent tab.
+
+config/keymaps.vim  Core movement, resize, tab, terminal, and Neo-tree keys.
+
+config/coc.vim      CoC completion, LSP navigation, formatting, diagnostics.
+
+config/review.vim   Fugitive, ALE, quickfix, and location-list review keys.
+
+lua/queryvs/ui.lua  Catppuccin colorscheme setup.
+
+lua/queryvs/neotree.lua
+                    Neo-tree behavior and file open rules.
+
+lua/queryvs/tools.lua
+                    Treesitter, markdown, mini.nvim modules, picker keys, and
+                    mini.clue leader groups.
+
+
 Plugins
 -------
 vim-plug            Plugin manager used by init.vim. Run :PlugInstall after
@@ -48,6 +78,64 @@ catppuccin          Colorscheme with local highlight overrides.
 glow.nvim           Markdown preview command used by Space mp.
 
 render-markdown     Inline Markdown rendering used by Space md.
+
+
+Daily Workflow
+--------------
+1. Open Neovim without a file argument. Focus starts in Neo-tree.
+
+2. Use Neo-tree as the project control surface:
+   e opens a file in the current file window and keeps focus in Neo-tree.
+   Enter, o, or t opens a file in a tab, skips duplicates, and keeps focus in
+   Neo-tree.
+   s/v opens a vertical split in the current tab, S opens a horizontal split.
+
+3. Use real Vim tabs for separate work contexts. Split layouts belong to tabs,
+   so Tab and Shift Tab switch between preserved layouts.
+
+4. Use Ctrl t for an Agent terminal tab. Use Space tt when you want the
+   persistent bottom terminal panel instead.
+
+5. For code review, use Space gs for Fugitive status, Space gb for blame, and
+   Space gD for a diff split.
+
+6. For project navigation, use Space ff for files, Space fg for live grep,
+   Space co for outline, and Space cs for workspace symbols.
+
+
+CoC Extensions
+--------------
+Installed CoC extensions live under ~/.config/coc/extensions.
+
+Current language extensions in this setup:
+coc-tsserver        JavaScript and TypeScript language server.
+coc-json            JSON language server.
+coc-python          Python language server integration.
+coc-go              Go and gopls integration.
+coc-lua             Lua language server integration.
+coc-sh              Shell script language server.
+coc-docker          Dockerfile language server.
+
+Useful CoC commands:
+:CocInfo            Show CoC environment and active extensions.
+:CocRestart         Restart CoC after extension or language server issues.
+:CocInstall <name>  Install a new CoC extension.
+:CocUpdate          Update installed CoC extensions.
+
+Formatting policy:
+Space cf            Uses CoC formatting.
+Space af            Uses ALE fixer manually.
+ALE fix-on-save is disabled so formatting does not happen unexpectedly.
+
+
+Maintenance
+-----------
+:PlugInstall        Install missing plugins after editing config/plugins.vim.
+:PlugUpdate         Update vim-plug plugins.
+:TSUpdate           Update Treesitter parsers.
+
+Git ignores local plugin installs, logs, swap files, sessions, and local Codex
+session files. Commit config source files and documentation, not plugged/.
 
 
 General
@@ -131,11 +219,11 @@ keeps focus in Neo-tree.
 Terminal
 --------
 Space tt            Open/focus persistent bottom terminal panel
-Ctrl t              Open terminal in a new tab
+Ctrl t              Open Agent terminal in a new tab
 Space tv            Open/focus persistent vertical terminal panel
 Space tf            Open new bottom terminal at last focused file directory
 Space tF            Open new vertical terminal at last focused file directory
-Space tN            Open terminal in a new tab
+Space tN            Open Agent terminal in a new tab
 
 Esc                 Leave terminal mode and return to Vim commands
 Esc Esc             Same as Esc

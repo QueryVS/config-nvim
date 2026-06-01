@@ -1,0 +1,12 @@
+plugged/
+.nvimlog
+.codex-sessions.txt
+
+*.swp
+*.swo
+Session.vim
+.netrwhist
+
+shada/
+undo/
+*.log
