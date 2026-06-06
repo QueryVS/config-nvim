@@ -1,6 +1,6 @@
 plugged/
 .nvimlog
-.codex-sessions.txt
+.codex-session.txt
 
 *.swp
 *.swo

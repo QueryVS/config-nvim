@@ -80,6 +80,20 @@ glow.nvim           Markdown preview command used by Space mp.
 render-markdown     Inline Markdown rendering used by Space md.
 
 
+Nerd Font
+---------
+Neo-tree icons require a Nerd Font in the terminal. Plain JetBrains Mono does
+not include the extra icon glyphs; install JetBrainsMono Nerd Font and select it
+in the terminal font settings.
+
+Linux local install:
+mkdir -p ~/.local/share/fonts
+cd /tmp
+curl -LO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+unzip JetBrainsMono.zip -d ~/.local/share/fonts/JetBrainsMonoNerd
+fc-cache -fv
+
+
 Daily Workflow
 --------------
 1. Open Neovim without a file argument. Focus starts in Neo-tree.
