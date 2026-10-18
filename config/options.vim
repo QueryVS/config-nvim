@@ -12,7 +12,7 @@ set splitright
 set hidden
 set updatetime=300
 set timeoutlen=1200
-set mouse=a
+set mouse=
 set clipboard=unnamedplus
 set undofile
 set ignorecase

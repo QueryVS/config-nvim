@@ -68,7 +68,7 @@ endfunction
 
 function! s:OpenTerminalTab() abort
   tabnew
-  let t:queryvs_tab_label = 'Agent'
+  let t:queryvs_tab_label = 'Terminal'
   terminal
   startinsert
 endfunction
