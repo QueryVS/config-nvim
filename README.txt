@@ -168,6 +168,11 @@ Ctrl j              Move to lower window
 Ctrl k              Move to upper window
 Ctrl l              Move to right window
 
+Alt Shift Left      Move to left window
+Alt Shift Down      Move to lower window
+Alt Shift Up        Move to upper window
+Alt Shift Right     Move to right window
+
 Alt Shift h         Decrease window width
 Alt Shift l         Increase window width
 Alt Shift j         Decrease window height

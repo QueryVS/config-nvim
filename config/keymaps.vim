@@ -10,6 +10,10 @@ nnoremap <silent> <C-h> <C-w>h
 nnoremap <silent> <C-j> <C-w>j
 nnoremap <silent> <C-k> <C-w>k
 nnoremap <silent> <C-l> <C-w>l
+nnoremap <silent> <A-S-Left> <C-w>h
+nnoremap <silent> <A-S-Down> <C-w>j
+nnoremap <silent> <A-S-Up> <C-w>k
+nnoremap <silent> <A-S-Right> <C-w>l
 nnoremap <silent> <leader><Left> :vertical resize -5<CR>
 nnoremap <silent> <leader><Right> :vertical resize +5<CR>
 nnoremap <silent> <leader><Up> :call QueryVSResizeHeight(3)<CR>
@@ -48,6 +52,10 @@ tnoremap <C-h> <C-\><C-n><C-w>h
 tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
+tnoremap <A-S-Left> <C-\><C-n><C-w>h
+tnoremap <A-S-Down> <C-\><C-n><C-w>j
+tnoremap <A-S-Up> <C-\><C-n><C-w>k
+tnoremap <A-S-Right> <C-\><C-n><C-w>l
 
 nnoremap <leader>a <Plug>(EasyAlign)
 xnoremap <leader>a <Plug>(EasyAlign)

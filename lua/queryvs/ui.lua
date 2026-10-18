@@ -7,14 +7,14 @@ end
 
 local function apply_window_highlights()
   -- Keep splits visible while letting the focused window remain calm.
-  vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#706c54" })
-  vim.api.nvim_set_hl(0, "VertSplit", { fg = "#706c54" })
+  vim.api.nvim_set_hl(0, "WinSeparator", { bg = "#30332b", fg = "#928e78" })
+  vim.api.nvim_set_hl(0, "VertSplit", { bg = "#30332b", fg = "#928e78" })
   vim.api.nvim_set_hl(0, "NormalNC", { bg = "#181b1b" })
   vim.api.nvim_set_hl(0, "CursorLine", { bg = "#2a3028" })
   vim.api.nvim_set_hl(0, "StatusLine", { bg = "#30362e", fg = "#d3d1c8" })
-  vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "#222625", fg = "#928e78" })
+  vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "#30332b", fg = "#c0ba9f" })
   vim.api.nvim_set_hl(0, "MiniStatuslineFilename", { bg = "#3b4737", fg = "#d3d1c8", bold = true })
-  vim.api.nvim_set_hl(0, "MiniStatuslineInactive", { bg = "#222625", fg = "#928e78" })
+  vim.api.nvim_set_hl(0, "MiniStatuslineInactive", { bg = "#30332b", fg = "#c0ba9f" })
   vim.api.nvim_set_hl(0, "TabLine", { bg = "#222625", fg = "#928e78" })
   vim.api.nvim_set_hl(0, "TabLineSel", { bg = "#3b4737", fg = "#d3d1c8", bold = true })
   vim.api.nvim_set_hl(0, "TabLineFill", { bg = "#181b1b" })
