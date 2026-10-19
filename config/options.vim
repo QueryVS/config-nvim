@@ -4,7 +4,7 @@ set number
 set relativenumber
 set cursorline
 set signcolumn=yes
-set colorcolumn=100
+set colorcolumn=
 set scrolloff=8
 set sidescrolloff=8
 set splitbelow

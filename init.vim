@@ -13,6 +13,7 @@ source ~/.config/nvim/config/options.vim
 source ~/.config/nvim/config/functions.vim
 source ~/.config/nvim/config/terminal.vim
 source ~/.config/nvim/config/keymaps.vim
+source ~/.config/nvim/config/session.vim
 source ~/.config/nvim/config/coc.vim
 source ~/.config/nvim/config/review.vim
 

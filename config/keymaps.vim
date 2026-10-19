@@ -5,6 +5,8 @@ nnoremap <silent> <leader>w :write<CR>
 nnoremap <silent> <leader>q :quit<CR>
 nnoremap <silent> <leader>x :bdelete<CR>
 nnoremap <silent> <leader>sv :source $MYVIMRC<CR>
+nnoremap <silent> <leader>ss :call QueryVSSaveSession()<CR>
+nnoremap <silent> <leader>sl :call QueryVSLoadSession()<CR>
 
 nnoremap <silent> <C-h> <C-w>h
 nnoremap <silent> <C-j> <C-w>j

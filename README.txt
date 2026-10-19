@@ -23,6 +23,8 @@ config/terminal.vim Terminal panel, current-directory terminals, and Agent tab.
 
 config/keymaps.vim  Core movement, resize, tab, terminal, and Neo-tree keys.
 
+config/session.vim  Project-local Session.vim save helper.
+
 config/coc.vim      CoC completion, LSP navigation, formatting, diagnostics.
 
 config/review.vim   Fugitive, ALE, quickfix, and location-list review keys.
@@ -147,6 +149,8 @@ Maintenance
 :PlugInstall        Install missing plugins after editing config/plugins.vim.
 :PlugUpdate         Update vim-plug plugins.
 :TSUpdate           Update Treesitter parsers.
+Space ss            Save the current project session to Session.vim.
+Space sl            Restore the current project session from Session.vim.
 
 Git ignores local plugin installs, logs, swap files, sessions, and local Codex
 session files. Commit config source files and documentation, not plugged/.
@@ -159,6 +163,8 @@ Space w             Save file
 Space q             Quit window
 Space x             Close current buffer
 Space sv            Reload init.vim
+Space ss            Save project session
+Space sl            Restore project session
 
 
 Windows and Splits
